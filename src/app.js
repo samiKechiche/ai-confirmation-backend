@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./config/swagger');
 const routes = require('./routes');
@@ -8,26 +9,31 @@ const { globalErrorHandler, notFoundHandler } = require('./middleware/errorHandl
 
 /**
  * Express Application Setup
- * 
+ *
  * Order of middleware matters:
- * 1. Body parsing
- * 2. API routes
- * 3. Swagger documentation
- * 4. 404 handler (for unknown routes)
- * 5. Global error handler (catches all errors)
+ * 1. CORS
+ * 2. Body parsing
+ * 3. API routes
+ * 4. Swagger documentation
+ * 5. Health check
+ * 6. 404 handler (for unknown routes)
+ * 7. Global error handler (catches all errors)
  */
 
 const app = express();
 
+// Enable CORS for all origins (frontend and teammate modules)
+app.use(cors());
+
 // Parse JSON request bodies
-app.use(express.json({limit: '1mb'}));
+app.use(express.json({ limit: '1mb' }));
 
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
 // Request logging (simple console output)
 app.use((req, res, next) => {
-console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
   next();
 });
 
@@ -49,7 +55,19 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
   customSiteTitle: 'AI Confirmation API Docs',
 }));
 
+// ============================================================
+// HEALTH CHECK
+// ============================================================
 
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    data: {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+    },
+  });
+});
 
 // ============================================================
 // ERROR HANDLING (MUST BE LAST)
@@ -58,7 +76,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
 // Handle requests to unknown routes
 app.use(notFoundHandler);
 
-// Global error handler — catches everything
+// Global error handler -- catches everything
 app.use(globalErrorHandler);
 
 module.exports = app;

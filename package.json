@@ -1,15 +1,32 @@
 {
   "name": "ai-confirmation-backend",
   "version": "1.0.0",
-  "description": "ackend for the AI Order Confirmation internship project.",
-  "main": "index.js",
+  "description": "Backend for the AI Order Confirmation internship project.",
+  "main": "src/server.js",
   "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "migrate": "npx prisma migrate dev",
+    "migrate:prod": "npx prisma migrate deploy",
+    "generate": "npx prisma generate",
+    "studio": "npx prisma studio",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "order-confirmation",
+    "rest-api",
+    "express",
+    "prisma",
+    "internship"
+  ],
   "author": "Sami Kechiche",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "joi": "^18.2.3",
@@ -17,7 +34,6 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@prisma/client": "^6.19.3",
     "nodemon": "^3.1.14",
     "prisma": "^6.19.3"
   }

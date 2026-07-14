@@ -1,15 +1,18 @@
 /**
- * Notifier — sends HTTP requests to teammate modules.
- * 
+ * Notifier -- sends HTTP requests to teammate modules.
+ *
  * Intern 2's service (SMS/Email) runs at SMS_SERVICE_URL
  * Intern 3's service (AI Voice) runs at VOICE_SERVICE_URL
- * 
+ *
  * If a teammate's service is not running, the error is logged
  * but does NOT fail the order operation.
  */
 
 const SMS_SERVICE_URL = process.env.SMS_SERVICE_URL || 'http://localhost:4000';
 const VOICE_SERVICE_URL = process.env.VOICE_SERVICE_URL || 'http://localhost:5000';
+
+// Timeout for fetch requests to teammate services (5 seconds)
+const FETCH_TIMEOUT = 5000;
 
 /**
  * Send a notification to the SMS/Email module when an order is created.
@@ -39,22 +42,21 @@ async function notifySmsService(order) {
           })),
         },
       }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT),
     });
 
-if (!response.ok) {
-    const body = await response.text();
-
-    console.error(
+    if (!response.ok) {
+      const body = await response.text();
+      console.error(
         `[NOTIFIER] SMS service returned ${response.status}: ${body}`
-    );
-
-    return;
-}
+      );
+      return;
+    }
 
     console.log(`[NOTIFIER] SMS service notified for order ${order.orderNumber}`);
   } catch (err) {
     console.error(`[NOTIFIER] Failed to notify SMS service: ${err.message}`);
-    // Do NOT throw — order creation must succeed even if notification fails
+    // Do NOT throw -- order creation must succeed even if notification fails
   }
 }
 
@@ -78,22 +80,21 @@ async function notifyVoiceService(order) {
           serviceType: order.serviceType,
         },
       }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT),
     });
 
-if (!response.ok) {
-    const body = await response.text();
-
-    console.error(
-        `[NOTIFIER] SMS service returned ${response.status}: ${body}`
-    );
-
-    return;
-}
+    if (!response.ok) {
+      const body = await response.text();
+      console.error(
+        `[NOTIFIER] Voice service returned ${response.status}: ${body}`
+      );
+      return;
+    }
 
     console.log(`[NOTIFIER] Voice service notified for order ${order.orderNumber}`);
   } catch (err) {
     console.error(`[NOTIFIER] Failed to notify voice service: ${err.message}`);
-    // Do NOT throw — the status update must succeed even if notification fails
+    // Do NOT throw -- the status update must succeed even if notification fails
   }
 }
 

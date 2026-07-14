@@ -13,12 +13,6 @@ class AppError extends Error {
   }
 }
 
-class ValidationError extends AppError {
-  constructor(message, details = []) {
-    super(message, 422);
-    this.details = details;
-  }
-}
 
 class NotFoundError extends AppError {
   constructor(message = 'Resource not found') {

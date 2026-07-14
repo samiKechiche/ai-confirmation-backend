@@ -3,7 +3,6 @@ node_modules/
 
 # Environment
 .env
-.env.*
 
 # Build
 dist/
@@ -14,7 +13,6 @@ logs/
 
 # Prisma
 prisma/*.db
-prisma/migrations/migration_lock.toml
 
 # OS
 .DS_Store
@@ -26,5 +24,3 @@ Thumbs.db
 
 # Testing
 coverage/
-
-/src/generated/prisma
