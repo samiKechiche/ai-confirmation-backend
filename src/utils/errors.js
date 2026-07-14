@@ -13,6 +13,11 @@ class AppError extends Error {
   }
 }
 
+class ValidationError extends AppError {
+  constructor(message = 'Validation failed') {
+    super(message, 422);
+  }
+}
 
 class NotFoundError extends AppError {
   constructor(message = 'Resource not found') {

@@ -124,7 +124,7 @@ const updateOrderSchema = Joi.object({
 
 const updateStatusSchema = Joi.object({
   status: Joi.string()
-    .valid(Object.values(ORDER_STATUS))
+    .valid(...Object.values(ORDER_STATUS))
     .required()
     .messages({
       'any.only': 'Invalid status value',
