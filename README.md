@@ -103,9 +103,9 @@ http://localhost:3000/api-docs
 | `VOICE_SERVICE_URL` | No | http://localhost:5000 | AI Voice module URL |
 | `NODE_ENV` | No | development | Environment (development/production) |
 
-## Integration with Teammate Modules
+## Module Integration
 
-### SMS/Email Module (Intern 2)
+### SMS/Email Module
 
 When an order is created, the backend sends a POST request to:
 ```
@@ -130,7 +130,7 @@ Payload:
 }
 ```
 
-### AI Voice Module (Intern 3)
+### AI Voice Module
 
 When confirmation starts, the backend sends a POST request to:
 ```
