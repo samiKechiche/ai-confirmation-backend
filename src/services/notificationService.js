@@ -98,7 +98,59 @@ async function notifyVoiceService(order) {
   }
 }
 
+/**
+ * Send a notification to the SMS/Email module on EVERY order status change.
+ * Intern 2's module uses this to trigger the recap/confirmation emails
+ * (CDC section 5) -- e.g. the final confirmation email when the order
+ * reaches CONFIRMED / REJECTED / UNREACHABLE.
+ * @param {Object} order - The updated order (with items)
+ */
+async function notifyOrderStatusUpdate(order) {
+  try {
+    const response = await fetch(`${SMS_SERVICE_URL}/notify/order-status-updated`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'order.status.updated',
+        data: {
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+          status: order.status,
+          customerName: order.customerName,
+          customerPhone: order.customerPhone,
+          customerEmail: order.customerEmail,
+          deliveryAddress: order.deliveryAddress,
+          totalAmount: parseFloat(order.totalAmount),
+          language: order.language,
+          serviceType: order.serviceType,
+          items: order.items.map((item) => ({
+            productName: item.productName,
+            quantity: item.quantity,
+            unitPrice: parseFloat(item.unitPrice),
+            totalPrice: parseFloat(item.totalPrice),
+          })),
+        },
+      }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT),
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      console.error(
+        `[NOTIFIER] SMS service returned ${response.status}: ${body}`
+      );
+      return;
+    }
+
+    console.log(`[NOTIFIER] Status update (${order.status}) sent for order ${order.orderNumber}`);
+  } catch (err) {
+    console.error(`[NOTIFIER] Failed to send status update: ${err.message}`);
+    // Do NOT throw -- the status update must succeed even if notification fails
+  }
+}
+
 module.exports = {
   notifySmsService,
   notifyVoiceService,
+  notifyOrderStatusUpdate,
 };

@@ -32,6 +32,11 @@ function globalErrorHandler(err, req, res, next) {
     return sendError(res, 'Validation failed', 422, details);
   }
 
+  // Handle malformed JSON body (thrown by express.json())
+  if (err.type === 'entity.parse.failed') {
+    return sendError(res, 'Malformed JSON in request body', 400);
+  }
+
   // Handle Prisma errors
   if (err.code === 'P2002') {
     // Unique constraint violation
@@ -41,6 +46,11 @@ function globalErrorHandler(err, req, res, next) {
   if (err.code === 'P2025') {
     // Record not found
     return sendError(res, 'Record not found', 404);
+  }
+
+  if (err.code === 'P2023') {
+    // Invalid value format (e.g. malformed UUID in a path parameter)
+    return sendError(res, 'Invalid ID format (expected a UUID)', 400);
   }
 
   if (err.code?.startsWith('P')) {

@@ -2,8 +2,7 @@ const orderRepository = require('../repositories/orderRepository');
 const statusHistoryRepository = require('../repositories/statusHistoryRepository');
 const { ORDER_STATUS, FINAL_STATUSES, isValidTransition } = require('../constants/orderStatuses');
 const { NotFoundError, BadRequestError } = require('../utils/errors');
-const { notifySmsService, notifyVoiceService } = require('./notificationService');
-
+const { notifySmsService, notifyVoiceService, notifyOrderStatusUpdate } = require('./notificationService');
 /**
  * OrderService -- contains ALL business logic for orders.
  *
@@ -34,10 +33,10 @@ class OrderService {
     // Create order with items
     const order = await orderRepository.create(orderData);
 
-    // Record initial status in history
+   // Record initial status in history
     await statusHistoryRepository.create({
       orderId: order.id,
-      previousStatus: ORDER_STATUS.PENDING,
+      previousStatus: null,
       newStatus: ORDER_STATUS.PENDING,
       reason: 'Order created',
     });
@@ -159,6 +158,9 @@ class OrderService {
       newStatus,
       reason: reason || null,
     });
+
+    // Emit the "order.status.updated" event on every status change (Kanban #1703)
+    await notifyOrderStatusUpdate(updatedOrder);
 
     // If we just moved to CONTACT_IN_PROGRESS, notify the voice service
     if (newStatus === ORDER_STATUS.CONTACT_IN_PROGRESS) {

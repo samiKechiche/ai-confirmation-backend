@@ -19,7 +19,7 @@ function formatJoiError(error) {
  */
 function validate(schema) {
   return (req, res, next) => {
-    const { error, value } = schema.validate(req.body, {
+    const { error, value } = schema.validate(req.body ?? {}, {
       abortEarly: false, // Report all errors, not just the first
       stripUnknown: true, // Remove unknown fields
     });

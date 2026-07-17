@@ -298,7 +298,7 @@ const options = {
     },
   },
   // Paths are read from route files where JSDoc @openapi comments are defined
-  apis: ['./src/routes/*.js'],
+  apis: ['./src/routes/*.js', './src/app.js'],
 };
 
 const specs = swaggerJsdoc(options);

@@ -1,6 +1,7 @@
 const express = require('express');
 const orderController = require('../controllers/orderController');
 const { validateCreateOrder, validateUpdateOrder, validateUpdateStatus, validateVoiceCallback } = require('../middleware/validate');
+const { apiKeyAuth } = require('../middleware/apiKey');
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/', validateCreateOrder, orderController.createOrder);
+router.post('/', apiKeyAuth, validateCreateOrder, orderController.createOrder);
 
 /**
  * @openapi
@@ -103,7 +104,7 @@ router.get('/:id', orderController.getOrderById);
  *       400:
  *         description: Cannot edit finalized order
  */
-router.put('/:id', validateUpdateOrder, orderController.updateOrder);
+router.put('/:id', apiKeyAuth, validateUpdateOrder, orderController.updateOrder);
 
 /**
  * @openapi
@@ -125,7 +126,7 @@ router.put('/:id', validateUpdateOrder, orderController.updateOrder);
  *       404:
  *         description: Order not found
  */
-router.delete('/:id', orderController.deleteOrder);
+router.delete('/:id', apiKeyAuth, orderController.deleteOrder);
 
 /**
  * @openapi
@@ -155,7 +156,7 @@ router.delete('/:id', orderController.deleteOrder);
  *       404:
  *         description: Order not found
  */
-router.patch('/:id/status', validateUpdateStatus, orderController.updateStatus);
+router.patch('/:id/status', apiKeyAuth, validateUpdateStatus, orderController.updateStatus);
 
 /**
  * @openapi
@@ -209,7 +210,7 @@ router.get('/:id/history', orderController.getOrderHistory);
  *       404:
  *         description: Order not found
  */
-router.post('/:id/callbacks/voice', validateVoiceCallback, orderController.voiceCallback);
+router.post('/:id/callbacks/voice', apiKeyAuth, validateVoiceCallback, orderController.voiceCallback);
 
 /**
  * @openapi
@@ -233,6 +234,6 @@ router.post('/:id/callbacks/voice', validateVoiceCallback, orderController.voice
  *       404:
  *         description: Order not found
  */
-router.post('/:id/start-confirmation', orderController.startConfirmation);
+router.post('/:id/start-confirmation', apiKeyAuth, orderController.startConfirmation);
 
 module.exports = router;

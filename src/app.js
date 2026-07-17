@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const { randomUUID } = require('crypto');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./config/swagger');
@@ -31,9 +32,15 @@ app.use(express.json({ limit: '1mb' }));
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging (simple console output)
+// Request logging with request_id, status code and duration (Kanban #1709)
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  req.requestId = randomUUID();
+  const start = Date.now();
+  res.on('finish', () => {
+    console.log(
+      `[${new Date().toISOString()}] [${req.requestId}] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${Date.now() - start}ms)`
+    );
+  });
   next();
 });
 
@@ -59,6 +66,17 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
 // HEALTH CHECK
 // ============================================================
 
+/**
+ * @openapi
+ * /health:
+ *   get:
+ *     summary: Health check
+ *     description: Returns 200 when the server is running. Used for monitoring.
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: Server is healthy
+ */
 app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
