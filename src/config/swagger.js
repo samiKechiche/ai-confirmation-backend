@@ -36,7 +36,15 @@ const options = {
         description: 'System-level endpoints',
       },
     ],
-    components: {
+   components: {
+      securitySchemes: {
+        apiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'X-API-Key',
+          description: 'Shared API key required for all mutating endpoints (POST, PUT, DELETE, PATCH).',
+        },
+      },
       schemas: {
         // ============================================================
         // REQUEST SCHEMAS

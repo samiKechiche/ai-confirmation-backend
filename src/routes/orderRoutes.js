@@ -12,6 +12,8 @@ const router = express.Router();
  *     summary: Create a new order
  *     description: Creates a new order with items. Initial status is PENDING.
  *     tags: [Orders]
+ *     security:
+ *       - apiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -39,6 +41,8 @@ router.post('/', apiKeyAuth, validateCreateOrder, orderController.createOrder);
  *     summary: Retrieve all orders
  *     description: Returns a list of all orders with their items, most recent first.
  *     tags: [Orders]
+ *     security:
+ *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: List of orders
@@ -56,6 +60,8 @@ router.get('/', orderController.getAllOrders);
  *     summary: Retrieve a single order
  *     description: Returns the details of one order including its items.
  *     tags: [Orders]
+ *     security:
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -83,6 +89,8 @@ router.get('/:id', orderController.getOrderById);
  *     summary: Update an order
  *     description: Updates editable order fields. Does NOT modify status.
  *     tags: [Orders]
+ *     security:
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -113,6 +121,8 @@ router.put('/:id', apiKeyAuth, validateUpdateOrder, orderController.updateOrder)
  *     summary: Delete an order
  *     description: Deletes an order and its associated items.
  *     tags: [Orders]
+ *     security:
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -135,6 +145,8 @@ router.delete('/:id', apiKeyAuth, orderController.deleteOrder);
  *     summary: Update order status
  *     description: Updates the order status using the state machine. Invalid transitions are rejected.
  *     tags: [Orders]
+ *     security:
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -165,6 +177,8 @@ router.patch('/:id/status', apiKeyAuth, validateUpdateStatus, orderController.up
  *     summary: Retrieve order status history
  *     description: Returns the complete status history audit trail for an order.
  *     tags: [Orders]
+ *     security:
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -189,6 +203,8 @@ router.get('/:id/history', orderController.getOrderHistory);
  *     summary: AI Voice callback
  *     description: Receives the result from the AI Voice module after customer interaction.
  *     tags: [Callbacks]
+ *     security:
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -219,6 +235,8 @@ router.post('/:id/callbacks/voice', apiKeyAuth, validateVoiceCallback, orderCont
  *     summary: Start confirmation process
  *     description: Manually moves an order from PENDING to CONTACT_IN_PROGRESS.
  *     tags: [Orders]
+ *     security:
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
