@@ -41,8 +41,6 @@ router.post('/', apiKeyAuth, validateCreateOrder, orderController.createOrder);
  *     summary: Retrieve all orders
  *     description: Returns a list of all orders with their items, most recent first.
  *     tags: [Orders]
- *     security:
- *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: List of orders
@@ -60,8 +58,6 @@ router.get('/', orderController.getAllOrders);
  *     summary: Retrieve a single order
  *     description: Returns the details of one order including its items.
  *     tags: [Orders]
- *     security:
- *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -177,8 +173,6 @@ router.patch('/:id/status', apiKeyAuth, validateUpdateStatus, orderController.up
  *     summary: Retrieve order status history
  *     description: Returns the complete status history audit trail for an order.
  *     tags: [Orders]
- *     security:
- *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
