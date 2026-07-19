@@ -208,7 +208,8 @@ confirmation email (CDC section 5); other statuses can be ignored.
 
 ### AI Voice Module
 
-When confirmation starts, the backend sends a POST request to:
+When an order enters CONTACT_IN_PROGRESS (i.e., the backend begins attempting to
+reach the customer), it sends a POST request to:
 ```
 POST {VOICE_SERVICE_URL}/call/initiate
 ```
