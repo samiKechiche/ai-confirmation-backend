@@ -57,6 +57,7 @@ The server will start on `http://localhost:3000` (or the port specified in your 
 | `generate` | `npx prisma generate` | Regenerate Prisma Client after schema changes |
 | `studio` | `npx prisma studio` | Open Prisma Studio (database GUI) |
 | `test` | `jest --runInBand` | Run the automated test suite (uses a separate test database) |
+| `docs:json` | `node -e "..." > openapi.json` | Generate a static openapi.json file from the live Swagger spec |
 
 ## Running Tests
 
