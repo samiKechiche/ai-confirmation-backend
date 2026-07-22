@@ -4,7 +4,7 @@ const API_KEY = process.env.API_KEY;
 
 /**
  * Simple shared API-key check for sensitive (mutating) endpoints.
- * Satisfies Kanban #1711 -- the task explicitly allows "JWT ou tokens API",
+ * the task explicitly allows "JWT ou tokens API",
  * and a single shared key is the simplest correct implementation of the
  * "tokens API" option for a project with no user-account concept.
  *

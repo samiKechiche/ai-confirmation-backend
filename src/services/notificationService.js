@@ -101,7 +101,7 @@ async function notifyVoiceService(order) {
 /**
  * Send a notification to the SMS/Email module on EVERY order status change.
  * Intern 2's module uses this to trigger the recap/confirmation emails
- * (CDC section 5) -- e.g. the final confirmation email when the order
+ * -- e.g. the final confirmation email when the order
  * reaches CONFIRMED / REJECTED / UNREACHABLE.
  * @param {Object} order - The updated order (with items)
  */

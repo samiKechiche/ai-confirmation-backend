@@ -2,7 +2,7 @@
  * Integration tests for the Orders API (Kanban #1705 and #1713).
  *
  * Covers: every CRUD endpoint, state machine transitions, voice callbacks,
- * status history, the API-key auth added in this project's Step 7, and the
+ * status history, the API-key auth, and the
  * order.status.updated / order.created webhook events (teammate services
  * are MOCKED via global.fetch so we can capture and assert on payloads
  * without running the real SMS/Voice services).
