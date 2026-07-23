@@ -35,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 // Request logging with request_id, status code and duration (Kanban #1709)
 app.use((req, res, next) => {
   req.requestId = randomUUID();
+  res.setHeader('X-Request-Id', req.requestId);
   const start = Date.now();
   res.on('finish', () => {
     console.log(
