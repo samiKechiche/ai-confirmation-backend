@@ -11,6 +11,7 @@
     "generate": "npx prisma generate",
     "studio": "npx prisma studio",
     "docs:json": "node -e \"console.log(JSON.stringify(require('./src/config/swagger'), null, 2))\" > openapi.json",
+    "migrate:test:reset": "DATABASE_URL=\"postgresql://ai_confirmation_user:password@localhost:5432/aiconfirmation_test?schema=public\" npx prisma migrate reset",
 
 "test": "jest --runInBand"
   },

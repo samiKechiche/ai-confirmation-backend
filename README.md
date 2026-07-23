@@ -58,6 +58,7 @@ The server will start on `http://localhost:3000` (or the port specified in your 
 | `studio` | `npx prisma studio` | Open Prisma Studio (database GUI) |
 | `test` | `jest --runInBand` | Run the automated test suite (uses a separate test database) |
 | `docs:json` | `node -e "..." > openapi.json` | Generate a static openapi.json file from the live Swagger spec |
+| `migrate:test:reset` | `npx prisma migrate reset` (test DB only) | Drop, recreate, and reapply all migrations to the test database — for verifying the full migration history applies cleanly from scratch |
 
 ## Running Tests
 
