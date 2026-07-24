@@ -134,6 +134,7 @@ describe('POST /api/v1/orders', () => {
       'Order number is required',
       'Customer name is required',
       'Customer phone is required',
+      'Customer email is required', // <-- ADD THIS LINE
       'Delivery address is required',
       'Total amount is required',
       'Service type is required',
@@ -286,8 +287,26 @@ describe('PATCH /api/v1/orders/:id/status', () => {
     expect(updateCall).toBeDefined();
     expect(updateCall.body.data.status).toBe('CONTACT_IN_PROGRESS');
 
-    const voiceCall = notificationCalls.find((c) => c.url.includes('/call/initiate'));
+const voiceCall = notificationCalls.find((c) => c.url.includes('/call/initiate'));
     expect(voiceCall).toBeDefined();
+  });
+
+  test('notifications fire in the correct order across a full order lifecycle', async () => {
+    const order = await createOrder();
+    notificationCalls.length = 0; // ignore the order.created call from setup
+
+    await authPost(`/api/v1/orders/${order.id}/start-confirmation`);
+    await authPatch(`/api/v1/orders/${order.id}/status`).send({ status: 'WAITING_FOR_CUSTOMER_CONFIRMATION' });
+    await authPost(`/api/v1/orders/${order.id}/callbacks/voice`).send({ intent: 'CONFIRM', transcript: 'Yes' });
+
+    const eventNames = notificationCalls.map((c) => c.body.event);
+
+    expect(eventNames).toEqual([
+      'order.status.updated',        // PENDING -> CONTACT_IN_PROGRESS
+      'order.confirmation.required', // voice service notified right after, same step
+      'order.status.updated',        // -> WAITING_FOR_CUSTOMER_CONFIRMATION
+      'order.status.updated',        // -> CONFIRMED
+    ]);
   });
 });
 

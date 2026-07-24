@@ -77,9 +77,10 @@ const createOrderSchema = Joi.object({
       'string.empty': 'Customer phone is required',
       'any.required': 'Customer phone is required',
     }),
-  customerEmail: Joi.string().email().allow(null, '').optional()
+  customerEmail: Joi.string().email().required()
     .messages({
       'string.email': 'Please provide a valid email address',
+      'any.required': 'Customer email is required',
     }),
   deliveryAddress: Joi.string().min(1).max(500).required()
     .messages({
@@ -112,7 +113,7 @@ const updateOrderSchema = Joi.object({
   orderNumber: Joi.string().min(1).max(100).optional(),
   customerName: Joi.string().min(1).max(255).optional(),
   customerPhone: Joi.string().min(5).max(30).optional(),
-  customerEmail: Joi.string().email().allow(null, '').optional(),
+  customerEmail: Joi.string().email().optional(),
   deliveryAddress: Joi.string().min(1).max(500).optional(),
   totalAmount: Joi.number().positive().precision(2).optional(),
   language: Joi.string().valid('FR', 'AR', 'EN').optional(),

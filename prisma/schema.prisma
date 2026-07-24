@@ -41,7 +41,7 @@ model Order {
   orderNumber       String      @unique
   customerName      String
   customerPhone     String
-  customerEmail     String?
+  customerEmail     String
   deliveryAddress   String
   totalAmount       Decimal     @db.Decimal(10, 2)
   language          Language    @default(FR)
